@@ -1,6 +1,7 @@
 package ma.youcode.ProjetBanque.DAO;
 
-import ma.youcode.ProjetBanque.Modele.Client;
+import ma.youcode.ProjetBanque.Modele.CompteBanck;
+import ma.youcode.ProjetBanque.Modele.Personne;
 import ma.youcode.ProjetBanque.Modele.TypeClient;
 import ma.youcode.ProjetBanque.PostgreConection.ClasseConnection;
 
@@ -15,7 +16,7 @@ public class ClientsDImp  implements ClientsDAO {
   @Override
   public void AjoutClients(String nom, String prenom, int neroCompt, double solde, String typeClient) throws ClassNotFoundException, SQLException {
 
-    Client client = new Client();
+    CompteBanck client = new CompteBanck();
 
     try {
       conn = ClasseConnection.getMyConnexion();
@@ -59,9 +60,9 @@ public class ClientsDImp  implements ClientsDAO {
   }
 
   @Override
-  public void ModifierClients(int id, String nom, String prenom, int neroCompt, double solde, String typeClient) throws SQLException {
+  public void ModifierClients(int id, String nom, int neroCompt, double solde, String typeClient) throws SQLException {
 
-    Client client = new Client();
+    //CompteBanck client = new CompteBanck();
 
     try {
       conn = ClasseConnection.getMyConnexion();
@@ -83,7 +84,7 @@ public class ClientsDImp  implements ClientsDAO {
     }
 
     String req = "UPDATE  compteBanque SET nom=?,NumeroCompt=?,solde=?,id_type=? WHERE id_banq=?";
-    PreparedStatement statement = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
+    PreparedStatement statement = conn.prepareStatement(req);
     statement.setString(1, nom);
     statement.setInt(2, neroCompt);
     statement.setDouble(3, solde);
@@ -92,16 +93,7 @@ public class ClientsDImp  implements ClientsDAO {
     statement.executeUpdate();
 
 
-    if (typeClient=="Personne") {
 
-      String qr = "UPDATE personne SET prenom=? WHERE id_compt=?";
-      PreparedStatement preparedStatement1 = conn.prepareStatement(qr);
-      preparedStatement1.setString(1, prenom);
-      preparedStatement1.setInt(2, id);
-
-      preparedStatement1.executeUpdate();
-      System.out.println("modifier  personne");
-    }
 
   }
 
@@ -142,9 +134,9 @@ public class ClientsDImp  implements ClientsDAO {
   }
 
   @Override
-  public List<Client> AfficheClients(String typeCompt) {
+  public List<CompteBanck> AfficheClients(String typeCompt) {
 
-    List<Client> listClient = new ArrayList<>();
+    List<CompteBanck> listClient = new ArrayList<>();
     try {
       conn = ClasseConnection.getMyConnexion();
     } catch (ClassNotFoundException | SQLException e) {
@@ -158,10 +150,13 @@ public class ClientsDImp  implements ClientsDAO {
         PreparedStatement preparedStatement2 = conn.prepareStatement(qr);
         preparedStatement2.setString(1, typeCompt);
         ResultSet rs = preparedStatement2.executeQuery();
-        Client client;
+        CompteBanck client;
         while (rs.next()) {
-          client = new Client(rs.getInt("id_banq"), rs.getString("nom"), rs.getString("prenom"), rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
-          listClient.add(client);
+          if (rs.getString("nom_type").equals("Personne")){
+            client = new Personne(rs.getInt("id_banq"), rs.getString("nom"),rs.getString("prenom"), rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
+            listClient.add(client);
+          }
+
         }
       } catch (SQLException throwables) {
         throwables.printStackTrace();
@@ -174,11 +169,15 @@ public class ClientsDImp  implements ClientsDAO {
       try {
         PreparedStatement preparedStatement3 = conn.prepareStatement(qr1);
         preparedStatement3.setString(1, typeCompt);
-        ResultSet rs1 = preparedStatement3.executeQuery();
-        Client client;
-        while (rs1.next()) {
-          client = new Client(rs1.getInt("id_banq"), rs1.getString("nom"), rs1.getInt("numerocompt"), rs1.getDouble("solde"), rs1.getString("nom_type"));
-          listClient.add(client);
+        ResultSet rs = preparedStatement3.executeQuery();
+        CompteBanck client;
+        while (rs.next()) {
+          if (rs.getString("nom_type").equals("Entreprise"))
+          {
+            client = new Personne(rs.getInt("id_banq"), rs.getString("nom"), "",rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
+            listClient.add(client);
+          }
+
         }
       } catch (SQLException throwables) {
         throwables.printStackTrace();
@@ -189,8 +188,8 @@ public class ClientsDImp  implements ClientsDAO {
   }
 
   @Override
-  public List<Client> AffichAllClients() {
-    List<Client> listClient = new ArrayList<>();
+  public List<CompteBanck> AffichAllClients() {
+    List<CompteBanck> listClient = new ArrayList<>();
     try {
       conn = ClasseConnection.getMyConnexion();
     } catch (ClassNotFoundException | SQLException e) {
@@ -198,26 +197,30 @@ public class ClientsDImp  implements ClientsDAO {
     }
 
 
-    String qr = "select id_banq,nom,prenom,numerocompt,solde,nom_type from comptebanque,personne,typecompt where comptebanque.id_type=typecompt.id and comptebanque.id_banq=personne.id_compt";
 
-    try {
-      PreparedStatement preparedStatement2 = conn.prepareStatement(qr);
-      ResultSet rs = preparedStatement2.executeQuery();
-      Client client;
-      while (rs.next()) {
-        client = new Client(rs.getInt("id_banq"), rs.getString("nom"), rs.getString("prenom"), rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
-        listClient.add(client);
+      String qr = "select id_banq,nom,prenom,numerocompt,solde,nom_type from comptebanque,personne,typecompt where comptebanque.id_type=typecompt.id and comptebanque.id_banq=personne.id_compt";
+
+      try {
+        PreparedStatement preparedStatement2 = conn.prepareStatement(qr);
+        ResultSet rs = preparedStatement2.executeQuery();
+        CompteBanck client;
+        while (rs.next()) {
+          if (rs.getString("nom_type").equals("Personne")){
+            client = new Personne(rs.getInt("id_banq"), rs.getString("nom"),rs.getString("prenom"), rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
+            listClient.add(client);
+          }
+
+        }
+      } catch (SQLException throwables) {
+        throwables.printStackTrace();
       }
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
-    }
 
     return listClient;
   }
 
   @Override
-  public List<Client> AfficheByID(int id) {
-    List<Client> listClient = new ArrayList<>();
+  public Personne AfficheByID(int id) {
+   Personne personne=null;
     try {
       conn = ClasseConnection.getMyConnexion();
     } catch (ClassNotFoundException | SQLException e) {
@@ -231,17 +234,16 @@ public class ClientsDImp  implements ClientsDAO {
       PreparedStatement preparedStatement2 = conn.prepareStatement(qr);
       preparedStatement2.setInt(1, id);
       ResultSet rs = preparedStatement2.executeQuery();
-      Client client;
       while (rs.next()) {
-        client = new Client(rs.getInt("id_banq"), rs.getString("nom"), rs.getString("prenom"), rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
-        listClient.add(client);
+        personne= new Personne(rs.getInt("id_banq"), rs.getString("nom"), rs.getString("prenom"), rs.getInt("numerocompt"), rs.getDouble("solde"), rs.getString("nom_type"));
+
       }
     } catch (SQLException throwables) {
       throwables.printStackTrace();
     }
 
+    return personne;
 
-    return listClient;
   }
 
 }

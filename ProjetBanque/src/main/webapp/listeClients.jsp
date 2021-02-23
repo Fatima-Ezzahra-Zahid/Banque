@@ -17,7 +17,7 @@
 <body>
 
 <form method="post"  action="recherche">
-  <select class="form-select" aria-label="Default select example" name="typeclient" id="slt" onclick="changeType()" style="
+  <select class="form-select" aria-label="Default select example" name="typeclient" id="slt"  style="
     margin-top: 1em;
     margin-bottom: 2em;
 ">
@@ -26,7 +26,7 @@
     <option value="Entreprise">Entreprise</option>
 
   </select>
-  <button type="submit" class="btn btn-success">Recherche</button>
+  <button type="submit" class="btn btn-success" onclick="changeType()">Recherche</button>
 </form>
 
 <div class="container text-left">
@@ -48,15 +48,13 @@
           <tr>
             <th>id</th>
             <th>nom</th>
-            <th>Prenom</th>
+            <th id="div">Prenom</th>
             <th>Numero de compte</th>
             <th>Solde</th>
             <th>type de Client</th>
           </tr>
           </thead>
           <tbody>
-
-
       <c:forEach var="client" items="${listClients}">
           <tr>
             <td><c:out value="${client.id}" /></td>
@@ -70,14 +68,32 @@
               <a href="delete?id=<c:out value='${client.id}' />" class="btn btn-outline-danger btn-rounded"><i class="fas fa-trash"></i></a>
             </td>
           </tr>
-
       </c:forEach>
-
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+
+
+<script>
+
+  var div=document.getElementById("div");
+
+  var typeclient=document.getElementById("slt");
+
+
+  function changeType() {
+
+    if (typeclient.value == "Personne") {
+      div.style.display = "table-cell";
+    }
+    else {
+      div.style.display = "none";
+    }
+
+  }
+</script>
 </body>
 </html>

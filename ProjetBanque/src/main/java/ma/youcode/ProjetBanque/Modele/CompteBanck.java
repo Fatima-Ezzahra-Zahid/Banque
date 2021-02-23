@@ -1,28 +1,27 @@
 package ma.youcode.ProjetBanque.Modele;
 
-public class Client {
+public class CompteBanck {
 
   private int id;
   private String nom;
-  private String prenom;
   private int NeroCompt;
   private double solde;
   private String typeClient;
 
 
-  public Client()
+  public CompteBanck()
   {
 
   }
 
 
-  public Client( String nom, int neroCompt, double solde, String typeClient) {
+  public CompteBanck(String nom, int neroCompt, double solde, String typeClient) {
     this.nom = nom;
     NeroCompt = neroCompt;
     this.solde = solde;
     this.typeClient = typeClient;
   }
-  public Client(int id, String nom, int neroCompt, double solde, String typeClient) {
+  public CompteBanck(int id, String nom, int neroCompt, double solde, String typeClient) {
     this.id = id;
     this.nom = nom;
     NeroCompt = neroCompt;
@@ -30,32 +29,8 @@ public class Client {
     this.typeClient = typeClient;
   }
 
-  public Client(int id, String nom,String prenom, int neroCompt, double solde, String typeClient) {
-    this.id = id;
-    this.nom = nom;
-    this.prenom=prenom;
-    NeroCompt = neroCompt;
-    this.solde = solde;
-    this.typeClient = typeClient;
 
-  }
 
-  public Client( String nom,String prenom, int neroCompt, double solde, String typeClient) {
-    this.nom = nom;
-    this.prenom=prenom;
-    NeroCompt = neroCompt;
-    this.solde = solde;
-    this.typeClient = typeClient;
-
-  }
-
-  public String getPrenom() {
-    return prenom;
-  }
-
-  public void setPrenom(String prenom) {
-    this.prenom = prenom;
-  }
 
   public int getId() {
     return id;

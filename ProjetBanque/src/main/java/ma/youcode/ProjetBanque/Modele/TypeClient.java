@@ -2,7 +2,7 @@ package ma.youcode.ProjetBanque.Modele;
 
 public class TypeClient {
 
-  private int id;
+  private int id_type;
   private String nom;
 
   public TypeClient()
@@ -12,16 +12,16 @@ public class TypeClient {
 
   public TypeClient(int id, String nom) {
     super();
-    this.id = id;
+    this.id_type = id;
     this.nom = nom;
   }
 
   public int getId() {
-    return id;
+    return id_type;
   }
 
   public void setId(int id) {
-    this.id = id;
+    this.id_type = id;
   }
 
   public String getNom() {

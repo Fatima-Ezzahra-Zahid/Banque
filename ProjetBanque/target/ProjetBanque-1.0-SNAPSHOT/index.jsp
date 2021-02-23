@@ -43,13 +43,8 @@
                 <div class="card-header">Ajout Client</div>
                 <div class="card-body">
                   <h5 class="card-title"></h5>
-                  <c:if test="${client != null}">
-                  <form class="form-horizontal" action="update" method="post">
-                    </c:if>
-                    <c:if test="${client == null}">
-                    <form class="form-horizontal" action="insert" method="post">
-                      </c:if>
 
+                    <form class="form-horizontal" action="insert" method="post">
 
 
                         <c:if test="${client != null}">
@@ -75,9 +70,9 @@
                       </div>
                     </div>
                     <div class="line"></div><br>
-                    <div class="form-group row"  id="div" >
+                    <div class="form-group row"  id="div" style="visibility: hidden "  >
                       <label class="col-sm-2">Prenom</label>
-                      <div class="col-sm-10">
+                      <div class="col-sm-10" >
                         <input type="text"  name="prenom" class="form-control">
                       </div>
                     </div>
@@ -119,6 +114,23 @@
 </table>
 
 
-<script type="text/javascript" src="js/script.js"></script>
+<script>
+
+  var div=document.getElementById("div");
+
+  var typeclient=document.getElementById("slt");
+
+
+  function changeType() {
+
+    if (typeclient.value == "Personne") {
+      div.style.visibility = "visible";
+    }
+    else {
+      div.style.visibility = "hidden";
+    }
+
+  }
+</script>
 </body>
 </html>

@@ -1,11 +1,8 @@
 package ma.youcode.ProjetBanque.PostgreConection;
 
 import ma.youcode.ProjetBanque.DAO.ClientsDImp;
-import ma.youcode.ProjetBanque.Modele.Client;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestConnection {
 
@@ -15,8 +12,8 @@ public class TestConnection {
     //cl.AjoutClients("najma", "fatima",1,2,"Entreprise");
 
 
-    //cl.ModifierClients(10,"zzzzzz","titim",23444,222,"Entreprise");
-    //System.out.println("bien Modifier");
+//    cl.ModifierClients(55,"zzzzzz",23444,222,"Personne");
+//    System.out.println("bien Modifier");
 
 
 

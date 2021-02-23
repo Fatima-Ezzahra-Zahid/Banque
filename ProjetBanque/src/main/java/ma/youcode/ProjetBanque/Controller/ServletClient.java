@@ -1,7 +1,9 @@
 package ma.youcode.ProjetBanque.Controller;
 
 import ma.youcode.ProjetBanque.DAO.ClientsDImp;
-import ma.youcode.ProjetBanque.Modele.Client;
+import ma.youcode.ProjetBanque.DAO.PersonneDAOImpl;
+import ma.youcode.ProjetBanque.Modele.CompteBanck;
+import ma.youcode.ProjetBanque.Modele.Personne;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,11 +17,10 @@ import java.util.List;
 public class ServletClient extends HttpServlet {
   @Serial
   private static final long serialVersionUID = 1L;
-  private ClientsDImp clientsDImp ;
+  private ClientsDImp clientsDImp =new ClientsDImp();;
 
   @Override
   public void init() throws ServletException {
-    clientsDImp =new ClientsDImp();
     super.init();
 
 
@@ -80,7 +81,7 @@ public class ServletClient extends HttpServlet {
   private void listclient(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
 
-    List<Client> listClients=clientsDImp.AffichAllClients();
+    List<CompteBanck> listClients=clientsDImp.AffichAllClients();
     request.setAttribute("listClients",listClients);
     RequestDispatcher dispatcher = request.getRequestDispatcher("listeClients.jsp");
     dispatcher.forward(request, response);
@@ -95,9 +96,10 @@ public class ServletClient extends HttpServlet {
   private void showEditForm(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, ServletException, IOException {
     int id = Integer.parseInt(request.getParameter("id"));
-    List<Client> existingclient =this.clientsDImp.AfficheByID(id);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-    request.setAttribute("client", existingclient);
+    System.out.println(id);
+     Personne existingclient =clientsDImp.AfficheByID(id);
+    RequestDispatcher dispatcher = request.getRequestDispatcher("Modifier.jsp");
+    request.setAttribute("compte", existingclient);
     dispatcher.forward(request, response);
   }
 
@@ -122,14 +124,17 @@ public class ServletClient extends HttpServlet {
     int numeroCompt= Integer.parseInt(request.getParameter("numero"));
     double solde=Double.parseDouble(request.getParameter("solde"));
     String type=request.getParameter("typeclient");
-    clientsDImp.ModifierClients(id,nom,prenom,numeroCompt,solde,type);
+    clientsDImp.ModifierClients(id,nom,numeroCompt,solde,type);
+    if (type.equals("Personne")){
+      PersonneDAOImpl p = new PersonneDAOImpl();
+      p.UpdatePersonne(id, prenom);
+    }
     response.sendRedirect("listeClients");
   }
 
   private void deleteClient(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException {
     int id = Integer.parseInt(request.getParameter("id"));
-
     String type=request.getParameter("typeclient");
     clientsDImp.SupprimeClinets(id,type);
     response.sendRedirect("listeClients");
@@ -140,12 +145,37 @@ public class ServletClient extends HttpServlet {
     throws SQLException, IOException, ServletException {
 
     String type=request.getParameter("typeclient");
-    List<Client> listClients=clientsDImp.AfficheClients(type);
+    List<CompteBanck> listClients=clientsDImp.AfficheClients(type);
     request.setAttribute("listClients",listClients);
-    
+    RequestDispatcher dispatcher = request.getRequestDispatcher("listeClients.jsp");
+    dispatcher.forward(request, response);
+
       }
 
 
 
 
 }
+	/*public User selectUser(int id) {
+		User user = null;
+		// Step 1: Establishing a Connection
+		try (Connection connection = getConnection();
+				// Step 2:Create a statement using connection object
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);) {
+			preparedStatement.setInt(1, id);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			ResultSet rs = preparedStatement.executeQuery();
+
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				String name = rs.getString("name");
+				String email = rs.getString("email");
+				String country = rs.getString("country");
+				user = new User(id, name, email, country);
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		return user;
+	}*/
